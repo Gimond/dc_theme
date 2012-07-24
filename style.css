@@ -1,0 +1,38 @@
+/*
+Theme Name: Digital cowboys theme
+Theme URI: http://www.digital-cowboys.fr/
+Description: Un thème HTML5 basé sur <a href="http://nathanstaines.com/articles/starkers-html5/">Starkers HTML5</a>
+Version: 1.0
+Author: Gimond
+*/
+
+.alignleft{
+	float:left;
+	margin:5px 10px 5px 0px;
+}
+.alignright{
+	float:right;
+	margin:5px 0px 5px 10px;
+}
+.aligncenter{
+	display:block;
+	margin:0 auto;
+	text-align:center;
+}
+
+/* div qui entoure les images insérées (posts ou pages) si elles ont une légende */
+.wp-caption{
+	color:#000;
+}
+/* légende des images insérées */
+.wp-caption-text{
+	color:red;
+}
+/* légende des galleries natives */
+.gallery-caption{
+
+}
+/* style des commentaires postés par l'auteur du post */
+.bypostauthor{
+
+}
