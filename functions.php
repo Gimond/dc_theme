@@ -68,6 +68,20 @@ function debug($var){
 	}
 }
 
+// desactive la console pour les non connectés
+if (!is_user_logged_in()){
+	add_action("wp_head", "desactive_console");
+	function desactive_console(){
+		?>
+		<script type="text/javascript">
+			var console = {
+				log: function(){}
+			}
+		</script>
+		<?php
+	}
+}
+
 // affichage des widgets
 if ( function_exists('register_sidebar') ) {
 	register_sidebar(array(
