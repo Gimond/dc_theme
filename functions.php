@@ -3,8 +3,8 @@
  * @package WordPress
  * @subpackage Starkers HTML5
  */
- 
-// images à la une 
+
+// images à la une
 add_theme_support( 'post-thumbnails' );
 
 // flux
@@ -16,7 +16,7 @@ function dc_scripts_styles() {
 	if ( is_singular() ) wp_enqueue_script( 'comment-reply' );
 	wp_enqueue_script('jquery');
 	wp_enqueue_script('general', get_template_directory_uri().'/js/general.js', array('jquery'));
-	
+
 	// AJOUT DES STYLES
 	wp_enqueue_style('reset', get_template_directory_uri().'/css/reset.css');
 	wp_enqueue_style('style', get_template_directory_uri().'/css/style.css', array('reset'));
@@ -33,7 +33,7 @@ function load_page_wait() {
 	$adminPage = strpos($_SERVER['REQUEST_URI'], "wp-admin") !== false;
 	if($options['maintenance'] && !is_user_logged_in() && !$isLoginPage && !$adminPage) {
 		include('maintenance.php');
-		exit();	
+		exit();
 	}
 }
 add_action('init','load_page_wait');
@@ -55,6 +55,18 @@ function add_google_analytics() {
 		echo $options['analytics'];
 }
 add_action('wp_footer', 'add_google_analytics');
+
+// DEBUG
+function debug($var){
+	if (is_user_logged_in()){
+		global $current_user;
+		if ($current_user->ID == 1){
+			echo "<pre style='position:relative;z-index:300;color:red'>";
+			var_dump($var);
+			echo "</pre>";
+		}
+	}
+}
 
 // affichage des widgets
 if ( function_exists('register_sidebar') ) {
@@ -83,14 +95,14 @@ function show_posts_nav() {
 function html5_comment($comment, $args, $depth) {
    $GLOBALS['comment'] = $comment; ?>
    <article <?php comment_class(); ?> id="comment-<?php comment_ID() ?>">
-      
+
       <header class="comment-author vcard">
          <?php echo get_avatar($comment,$size='48',$default='<path_to_url>' ); ?>
 
          <?php printf(__('<cite class="fn">%s</cite> <span class="says">dit:</span>', 'dc_theme'), get_comment_author_link()) ?>
-      
+
       </header>
-      
+
       <?php if ($comment->comment_approved == '0') : ?>
          <em><?php _e('Votre commentaire est en attente de validation.', 'dc_theme') ?></em>
       <?php endif; ?>
@@ -117,16 +129,16 @@ add_filter ('pre_update_option_blogname','update_screenshot');
 
 function update_screenshot($title = ""){
 	if (extension_loaded('gd') && function_exists('gd_info')) {
-		$file = get_template_directory_uri().'/screenshot_base.png'; 
+		$file = get_template_directory_uri().'/screenshot_base.png';
 		$image = imagecreatefrompng($file);
-		
+
 		// couleur texte
 		$color = "5E4121";
 		$rouge = hexdec('0x' . $color{0} . $color{1});
 		$vert = hexdec('0x' . $color{2} . $color{3});
 		$bleu = hexdec('0x' . $color{4} . $color{5});
 		$couleur = imagecolorallocate($image, $rouge, $vert, $bleu);
-		
+
 		// position texte
 		$font = 5;
 		if ($title == "")
@@ -134,14 +146,14 @@ function update_screenshot($title = ""){
 		$font_width = ImageFontWidth($font);
 		$text_width = $font_width * strlen($title);
 		$position_center = ceil((300 - $text_width) / 2);
-		
+
 		imagestring($image, $font, $position_center, 180, $title, $couleur);
 
 		$theme_dir = get_template_directory_uri();
 		$theme_dir = explode('/', $theme_dir);
 		$theme_dir = end($theme_dir);
 		imagepng($image, '../wp-content/themes/'.$theme_dir.'/screenshot.png', 0);
-		
+
 		return $title;
 	}
 }
