@@ -1,9 +1,4 @@
 <?php
-/**
- * @package WordPress
- * @subpackage Starkers HTML5
- */
-
 // images à la une
 add_theme_support( 'post-thumbnails' );
 
@@ -171,42 +166,6 @@ function update_screenshot($title = ""){
 		return $title;
 	}
 }
-
-
-/*
-// désactive le formattage automatique de wordpress
-remove_filter('the_content', 'wpautop');
-remove_filter('the_content', 'wptexturize');
-// empêche tinymce de rajouter/enlever des trucs au passage d'un onglet à l'autre (Visuel/HTML)
-function my_mce_before_init(){
-	?>
-	<script type="text/javascript">
-	//<![CDATA[
-	jQuery('body').bind('afterPreWpautop', function(e, o){
-		console.log('afterPreWpautop');
-		o.data = o.unfiltered
-			.replace(/caption\]\[caption/g, 'caption] [caption')
-			.replace(/<object[\s\S]+?<\/object>/g, function(a) {
-				return a.replace(/[\r\n]+/g, ' ');
-			});
-
-	}).bind('afterWpautop', function(e, o){
-		console.log('afterWpautop');
-		o.data = o.unfiltered;
-	});
-	//]]>
-	</script>
-	<?php
-}
-add_action('admin_print_footer_scripts', 'my_mce_before_init');
-// empêche tinymce d'ajouter/supprimer des trucs (encore)
-function tadv_mce_options($init){
-	$init['apply_source_formatting'] = true;
-	$init['remove_linebreaks'] = false;
-	return $init;
-}
-add_filter( 'tiny_mce_before_init', 'tadv_mce_options' );
-*/
 
 // Feuille de style éditeur tinymce
 add_editor_style('css/tinymce.css');

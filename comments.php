@@ -1,9 +1,4 @@
 <?php
-/**
- * @package WordPress
- * @subpackage Starkers HTML5
- */
-
 // Do not delete these lines
 	if (!empty($_SERVER['SCRIPT_FILENAME']) && 'comments.php' == basename($_SERVER['SCRIPT_FILENAME'])){
 		_e('Merci de ne pas charger cette page directement.', 'dc_theme');

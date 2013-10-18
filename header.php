@@ -1,9 +1,3 @@
-<?php
-/**
- * @package WordPress
- * @subpackage Starkers HTML5
- */
-?>
 <!doctype html>
 <html <?php language_attributes(); ?>>
 

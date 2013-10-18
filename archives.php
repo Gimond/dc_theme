@@ -1,13 +1,3 @@
-<?php
-/**
- * @package WordPress
- * @subpackage Starkers HTML5
- */
-/*
-Template Name: Archives
-*/
-?>
-
 <?php get_header(); ?>
 
 <?php get_search_form(); ?>

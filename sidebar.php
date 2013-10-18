@@ -1,10 +1,3 @@
-<?php
-/**
- * @package WordPress
- * @subpackage Starkers HTML5
- */
- 
-?>
 	<aside>
 		<ul>
 		<?php 	/* Widgetized sidebar, if you have the plugin installed. */

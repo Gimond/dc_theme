@@ -1,13 +1,4 @@
 jQuery('document').ready(function($){
-
-	// empeche ie de planter à chaque console
-	if (typeof console != "object") {
-		var console = {
-			'log':function(){}
-		};
-	}
-	
-	console.log('hop');
 	
 	// konami code
 	if ( window.addEventListener ) {
