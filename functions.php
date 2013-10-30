@@ -63,6 +63,24 @@ function debug($var){
 	}
 }
 
+// messages d'avertissement admin
+add_action( 'admin_notices', 'my_admin_notice' );
+function my_admin_notice(){
+	$message = "";
+
+	// moteurs de recherche bloqués
+   	$blog_public = get_option('blog_public');
+   	if ($blog_public == 0)
+   		$message.= "les moteurs de recherche sont bloqués, ";
+
+	// plugin SEO
+   	if (!is_plugin_active('all-in-one-seo-pack/all_in_one_seo_pack.php') && !is_plugin_active('wordpress-seo/wp-seo.php'))
+   		$message.= "aucun plugin de référencement n'est installé, ";
+
+   	if ($message != "")
+    echo '<div class="error"><p>Attention, '.substr($message, 0, -2).' !</p></div>';
+}
+
 // desactive la console pour les non connectés
 if (!is_user_logged_in()){
 	add_action("wp_head", "desactive_console");
