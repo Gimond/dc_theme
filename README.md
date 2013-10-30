@@ -1,5 +1,4 @@
-Basé sur Starkers HTML5
-http://nathanstaines.com/archive/starkers-html5
+(Basé sur Starkers HTML5)[http://nathanstaines.com/archive/starkers-html5]
 
 ### COMPREND ###
 * Jquery
