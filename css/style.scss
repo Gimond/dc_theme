@@ -1,0 +1,380 @@
+@import "compass/css3";
+
+$rose:#da1a5c;
+$rose_light:#dcc4db;
+$violet:#944f9f;
+$basefont:13;
+
+*, *:before, *:after {
+	-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
+}
+
+@function em($target, $context: $basefont) {
+	@if $target == 0 { @return 0 }
+	@return $target / $context + 0em;
+}
+
+body, html{
+	font-family:arial, helvetica, sans-serif;
+	margin:0;
+	padding:0;
+	font-size:$basefont+px;
+	color:#353535;
+	background:url('../images/bandeau_menu.jpg') 0px 47px repeat-x;
+}
+
+a, a:visited{
+	text-decoration:none;
+	color:$rose;
+}
+a:hover{
+	text-decoration: underline;
+}
+
+// formulaires
+.ui-state-error{
+	box-shadow: 0 0 2px 1px red;
+}
+.ui-state-valid{
+	// box-shadow: 0 0 2px 1px green;
+}
+
+.container{
+
+}
+
+.fancybox-inner{
+	#titre_popup{
+		font-size: em(16);
+		font-weight:bold;
+		width:100%;
+		text-align: center;
+		margin:10px 0px 30px;
+	}
+	#user_login, #user_pass{
+		margin-bottom:0px;
+		border:1px solid #b0b0b0;
+		@include border-radius(2px);
+		background:#efefef;
+	}
+	#rememberme{
+		margin-left:0;
+	}
+	td{
+		vertical-align: middle;
+		padding:5px 15px;
+	}
+	#connecter{
+		width:100%;
+		margin-top: 20px;
+		margin-bottom: 0px;
+		float:right;
+		font-size:em(20);
+		padding-top:18px;
+		padding-bottom:18px;
+	}
+}
+
+// HEADER
+
+header{
+
+	#surmenu{
+		height: 47px;
+		padding-top:8px;
+		text-align:right;
+
+		#recherche_header{
+			@include inline-block;
+			width:151px;
+			height: 32px;
+			border:1px solid #b0b0b0;
+			@include border-radius(2px);
+			background:url('../images/loupe.jpg') 10px 7px no-repeat #efefef;
+			padding-left:32px;
+		}
+		a{
+			@include inline-block;
+			margin-left:20px;
+			position:relative;
+			top:-8px;
+			&#bonjour, &#bonjour:hover{
+				color:#353535;
+				text-decoration:none;
+			}
+		}
+	}
+
+	#bandeau_menu{
+		height:119px;
+		position:relative;
+		margin-bottom:30px;
+
+		#logo_cause{
+			position:absolute;
+			top:15px;
+			right:0px;
+		}
+
+		#menu{
+			position:absolute;
+			bottom:0px;
+			right:0px;
+
+			a{
+				color:#FFF;
+				@include inline-block;
+				padding:0px 7px 16px 7px;
+				margin-left:25px;
+				margin-bottom:2px;
+				border-bottom:1px solid transparent;
+
+				&:hover{
+					text-decoration: none;
+					color:$rose;
+				}
+				&.actif{
+					border-color:$rose;
+				}
+			}
+		}
+	}
+}
+
+
+
+// ACCUEIL
+#intro{
+	font-size:em(15);
+}
+#pub{
+	padding-bottom:33px;
+	text-align:center;
+
+	img{
+		margin:0px auto 0px auto;
+		width:730px;
+		height: 90px;
+	}
+}
+.bloc_home{
+	position:relative;
+	display:block;
+
+	.barre_violette{
+		background:$violet;
+		height: 16px;
+		position:absolute;
+		top:2px;
+		right:0;
+		width: 100%;
+	}
+	h3{
+		color:$violet;
+		font-size:em(15);
+		line-height:inherit;
+		font-weight:bold;
+		margin:7px 0;
+	}
+	.texte_bloc_home{
+		line-height: em(16);
+		padding-right:45px;
+	}
+	.plus{
+		background:url('../images/plus.jpg');
+		position:absolute;
+		bottom:0;
+		right:0;
+		width: 40px;
+		height: 45px;
+	}
+
+	&.piti{
+		height:239px;
+		overflow:hidden;
+		margin-bottom:40px;
+		.thumb{
+			width: 100%;
+			height:122px;
+		}
+		h3{
+			color:$rose;
+		}
+	}
+}
+a.bloc_home{
+	cursor:pointer;
+	color:#353535;
+
+	&:hover{
+		text-decoration:none;
+		.plus{
+			background:url('../images/plus_on.jpg');
+		}
+	}
+}
+a.bouton, .bouton{
+	display:block;
+	border:0;
+	margin-bottom: 22px;
+	color:#FFF;
+	font-size:em(18);
+	text-transform:uppercase;
+	text-align:center;
+	background:$rose_light;
+	padding-top:22px;
+	padding-bottom:22px;
+	cursor:pointer;
+
+	&:hover{
+		text-decoration:none;
+		color:#FFF;
+		background:#caa6c9;
+	}
+}
+h2{
+	position:relative;
+	@include inline-block;
+	font-size:em(22);
+	color:$violet;
+	margin:0 0 13px 0;
+	line-height:inherit;
+	padding-right:10px;
+	background:#FFF;
+}
+
+.equipe_home{
+	float:left;
+
+	.thumb_equipe_home{
+		width: 160px;
+		height: 140px;
+		background: url('../images/defaut_thumb_equipe.jpg');
+	}
+}
+
+
+// BARRE PROGRESSION
+#conteneur_barre_progression{
+	height:205px;
+	position:relative;
+
+	#dons_recoltes{
+		color:$violet;
+		font-size:em(31);
+		font-weight:bold;
+		margin-top:30px;
+		margin-bottom:10px;
+		margin-left:17%;
+	}
+	#objectif{
+		width:17%;
+		position:absolute;
+		top:72px;
+		right:0;
+		color:#b8b8b8;
+		padding-left:15px;
+		font-size:em(22);
+	}
+	table{
+		width:80%;
+		margin:24px auto 0 auto;
+
+		td{
+			color:#b8b8b8;
+			text-align:center;
+			font-size:em(18);
+			span{
+				color:#353992;
+				font-weight:bold;
+			}
+		}
+	}
+}
+#fond_barre_progression{
+	position:relative;
+	width:66%;
+	margin:0 17%;
+	height:42px;
+	@include border-radius(21px);
+	@include background-image(linear-gradient(#bfbfbf, #d9d9d9 10%, #f2f2f2 88%, #f7f7f7 97%, #fcfcfc));
+	@include box-shadow(rgba(white, 1) 0 1px 0, rgba(black, 0.09) 0 1px 7px inset);
+	#coeur_gris{
+		position:absolute;
+		top:10px;
+		right:12px;
+		width: 29px;
+		height: 25px;
+		background:url('../images/coeur_gris.png') no-repeat;
+	}
+}
+#barre_progression{
+	position:absolute;
+	top:0;
+	left:0;
+	width:30%;
+	height:42px;
+	@include border-radius(21px);
+	@include background-image(linear-gradient(#b551c4, #53165e));
+	@include box-shadow(rgba(black, 0.75) 0 0 0, rgba(white, 0.66) 0 1px 2px inset);
+	#coeur_blanc{
+		position:absolute;
+		top:5px;
+		right:6px;
+		width: 40px;
+		height: 37px;
+		background:url('../images/coeur_blanc.png') no-repeat;
+	}
+}
+
+
+/* sidebar */
+aside{
+
+}
+
+
+// EQUIPES
+#chargement{
+	display:none;
+}
+#modele_bloc_equipe{
+	display:none;
+}
+.equipe{
+	float:left;
+	width:160px;
+	.thumb_equipe{
+		width: 160px;
+		height: 140px;
+		background: url('../images/defaut_thumb_equipe.jpg');
+	}
+}
+// creation
+#contenu_valider_equipe{
+	height:80px;
+}
+
+
+#menu_footer{
+	width:100%;
+	background:$rose_light;
+
+	h3{
+		color:#FFF;
+		font-size:em(16);
+		padding-bottom:9px;
+		margin-bottom:11px;
+		margin-top:20px;
+		border-bottom:2px solid white;
+		line-height:inherit;
+	}
+}
+
+#copyright{
+	width:100%;
+	color:#FFF;
+	background:#353535;
+	padding:20px 0px;
+}
+
