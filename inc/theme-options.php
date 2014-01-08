@@ -14,7 +14,7 @@ function theme_options_init(){
  * Load up the menu page
  */
 function theme_options_add_page() {
-	add_theme_page( __( 'Options', 'dc_theme' ), __( 'Options', 'dc_theme' ), 'edit_theme_options', 'theme_options', 'theme_options_do_page' );
+	add_menu_page( __( 'Options', 'dc_theme' ), __( 'Options', 'dc_theme' ), 'edit_theme_options', 'theme_options', 'theme_options_do_page' );
 }
 
 /**
@@ -38,7 +38,7 @@ function theme_options_do_page() {
 			<?php $options = get_option( 'dc_theme_options' ); ?>
 
 			<table class="form-table">
-			
+
 				<!-- Favicon -->
 				<tr valign="top"><th scope="row"><?php _e( 'Favicon', 'dc_theme' ); ?></th>
 					<td>
@@ -46,21 +46,21 @@ function theme_options_do_page() {
 						<label class="description" for="favicon"><img height='16' src='<?php echo $options['favicon'] ?>' /> (.ico de préférence)</label>
 					</td>
 				</tr>
-				
+
 				<!-- Google Analytics -->
 				<tr valign="top"><th scope="row"><?php _e( 'Code google analytics', 'dc_theme' ); ?></th>
 					<td>
 						<textarea id="dc_theme_options[analytics]" class="large-text" cols="50" rows="10" name="dc_theme_options[analytics]"><?php echo esc_textarea($options['analytics']); ?></textarea>
 					</td>
 				</tr>
-				
+
 				<!-- Maintenance -->
 				<tr valign="top"><th scope="row"><?php _e( 'Site en maintenance', 'dc_theme' ); ?></th>
 					<td>
 						<input type='checkbox' id="dc_theme_options[maintenance]" name="dc_theme_options[maintenance]" <?php if ($options['maintenance']) echo "checked='checked'"; ?> />
 					</td>
 				</tr>
-				
+
 			</table>
 
 			<p class="submit">
@@ -82,7 +82,7 @@ function dc_theme_options_validate($input){
 
 	// favicon
     if ($_FILES['favicon']['size'] > 0) {
-        $overrides = array('test_form' => false); 
+        $overrides = array('test_form' => false);
         $file = wp_handle_upload($_FILES['favicon'], $overrides);
         $input['favicon'] = $file['url'];
     }
@@ -90,7 +90,7 @@ function dc_theme_options_validate($input){
 		$options = get_option('dc_theme_options');
 		$input['favicon'] = $options['favicon'];
 	}
-	
+
 	// maintenance
 	if (isset( $input['maintenance']))
 		$input['maintenance'] = 1;
