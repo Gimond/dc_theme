@@ -20,6 +20,41 @@ function custom_post_revisions( $num, $post ) {
 // PAGE D'OPTIONS
 require_once ( get_template_directory() . '/inc/theme-options.php' );
 
+// TICKETS BUGHERD
+function init_bugherd(){
+	$options = get_option( 'dc_theme_options' );
+	if (is_user_logged_in() && $options['bugherd_front'] && $options['cle_bugherd'] != ''){
+		?>
+		<script type='text/javascript'>
+		(function (d, t) {
+		  var bh = d.createElement(t), s = d.getElementsByTagName(t)[0];
+		  bh.type = 'text/javascript';
+		  bh.src = '//www.bugherd.com/sidebarv2.js?apikey=<?php echo $options['cle_bugherd'] ?>';
+		  s.parentNode.insertBefore(bh, s);
+		  })(document, 'script');
+		</script>
+		<?php
+	}
+}
+add_action('wp_head', 'init_bugherd');
+
+function init_bugherd_admin(){
+	$options = get_option( 'dc_theme_options' );
+	if (is_user_logged_in() && $options['bugherd_admin'] && $options['cle_bugherd'] != ''){
+		?>
+		<script type='text/javascript'>
+		(function (d, t) {
+		  var bh = d.createElement(t), s = d.getElementsByTagName(t)[0];
+		  bh.type = 'text/javascript';
+		  bh.src = '//www.bugherd.com/sidebarv2.js?apikey=<?php echo $options['cle_bugherd'] ?>';
+		  s.parentNode.insertBefore(bh, s);
+		  })(document, 'script');
+		</script>
+		<?php
+	}
+}
+add_action('admin_head', 'init_bugherd_admin');
+
 // DESACTIVE L'EDITION DE FICHIER VIA LE BACK
 define('DISALLOW_FILE_EDIT', true);
 

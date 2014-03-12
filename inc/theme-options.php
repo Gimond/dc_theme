@@ -61,6 +61,24 @@ function theme_options_do_page() {
 					</td>
 				</tr>
 
+				<!-- Bugherd -->
+				<tr valign="top"><th colspan='2' scope="row"><h3><?php _e( 'Bugherd', 'dc_theme' ); ?></h3></th></tr>
+				<tr valign="top"><th scope="row"><?php _e( 'Activer Bugherd sur le front', 'dc_theme' ); ?></th>
+					<td>
+						<input type='checkbox' id="dc_theme_options[bugherd_front]" name="dc_theme_options[bugherd_front]" <?php if ($options['bugherd_front']) echo "checked='checked'"; ?> />
+					</td>
+				</tr>
+				<tr valign="top"><th scope="row"><?php _e( 'Activer Bugherd sur le back', 'dc_theme' ); ?></th>
+					<td>
+						<input type='checkbox' id="dc_theme_options[bugherd_admin]" name="dc_theme_options[bugherd_admin]" <?php if ($options['bugherd_admin']) echo "checked='checked'"; ?> />
+					</td>
+				</tr>
+				<tr valign="top"><th scope="row"><?php _e( 'Clé Bugherd', 'dc_theme' ); ?></th>
+					<td>
+						<input style='width:300px;' type='text' id="dc_theme_options[cle_bugherd]" name="dc_theme_options[cle_bugherd]" value="<?php if ($options['cle_bugherd']) echo $options['cle_bugherd']; ?>" />
+					</td>
+				</tr>
+
 			</table>
 
 			<p class="submit">
@@ -96,6 +114,18 @@ function dc_theme_options_validate($input){
 		$input['maintenance'] = 1;
 	else
 		$input['maintenance'] = 0;
+
+	// bugherd
+	if (isset( $input['bugherd_front']))
+		$input['bugherd_front'] = 1;
+	else
+		$input['bugherd_front'] = 0;
+	if (isset( $input['bugherd_admin']))
+		$input['bugherd_admin'] = 1;
+	else
+		$input['bugherd_admin'] = 0;
+	if (!isset( $input['cle_bugherd']))
+		$input['cle_bugherd'] = '';
 
 	return $input;
 }
