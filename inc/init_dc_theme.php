@@ -23,7 +23,7 @@ require_once ( get_template_directory() . '/inc/theme-options.php' );
 // TICKETS BUGHERD
 function init_bugherd(){
 	$options = get_option( 'dc_theme_options' );
-	if (is_user_logged_in() && $options['bugherd_front'] && $options['cle_bugherd'] != ''){
+	if ($options['bugherd_front'] && $options['cle_bugherd'] != ''){
 		?>
 		<script type='text/javascript'>
 		(function (d, t) {
@@ -40,7 +40,7 @@ add_action('wp_head', 'init_bugherd');
 
 function init_bugherd_admin(){
 	$options = get_option( 'dc_theme_options' );
-	if (is_user_logged_in() && $options['bugherd_admin'] && $options['cle_bugherd'] != ''){
+	if ($options['bugherd_admin'] && $options['cle_bugherd'] != ''){
 		?>
 		<script type='text/javascript'>
 		(function (d, t) {
