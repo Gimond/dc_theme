@@ -17,6 +17,9 @@ function custom_post_revisions( $num, $post ) {
     return 5;
 }
 
+// DESACTIVE LES MISES A JOUR AUTOMATIQUES
+add_filter( 'auto_update_core', '__return_false' );
+
 // PAGE D'OPTIONS
 require_once ( get_template_directory() . '/inc/theme-options.php' );
 
