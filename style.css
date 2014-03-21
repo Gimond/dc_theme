@@ -6,6 +6,11 @@ Version: 1.2
 Author: Gimond
 */
 
+/* permet de respecter la width fixée sans prendre en compte le padding */
+*, *:before, *:after {
+	-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
+}
+
 .alignleft{
 	float:left;
 	margin:5px 10px 5px 0px;
