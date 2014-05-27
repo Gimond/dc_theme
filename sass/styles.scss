@@ -1,0 +1,42 @@
+// customize bootstrap variables here:
+@import "variables";
+@import "bootstrap";
+
+@mixin breakpoint($point) {
+	@if $point == mobile {
+		@media (max-width: $screen-xs-max) { @content; }
+	}
+	@if $point == tablette {
+		@media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) { @content; }
+	}
+	@if $point == desktop {
+		@media (min-width: $screen-md-min) and (max-width: $screen-md-max) { @content; }
+	}
+	@if $point == full {
+		@media (min-width: $screen-lg-min) { @content; }
+	}
+}
+
+//UTILISATION :
+//@include breakpoint(mobile) { display:initial !important; }
+
+body, html{
+	font-family:arial, helvetica, sans-serif;
+	font-size:12px;
+	background-color: $body-bg;
+}
+
+header{
+	background:#DEDEDE;
+	margin-bottom:10px;
+}
+
+/* sidebar */
+aside{
+
+}
+
+footer{
+	background:#DEDEDE;
+	margin-top:10px;
+}

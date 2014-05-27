@@ -9,8 +9,8 @@ function dc_scripts_styles() {
 	wp_enqueue_script('general', get_template_directory_uri().'/js/general.js', array('jquery'));
 
 	// AJOUT DES STYLES
-	wp_enqueue_style('reset', get_template_directory_uri().'/css/reset.css');
-	wp_enqueue_style('style', get_template_directory_uri().'/css/style.css', array('reset'));
+	//wp_enqueue_style('reset', get_template_directory_uri().'/css/reset.css');
+	wp_enqueue_style('style', get_template_directory_uri().'/css/styles.css');
 }
 add_action('wp_enqueue_scripts', 'dc_scripts_styles');
 
