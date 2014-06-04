@@ -95,7 +95,7 @@ add_action('wp_footer', 'add_google_analytics');
 function debug($var){
 	if (is_user_logged_in()){
 		global $current_user;
-		if ($current_user->ID == 1){
+		if (is_future_ip()){
 			echo "<pre style='position:relative;z-index:300;color:red'>";
 			var_dump($var);
 			echo "</pre>";
@@ -111,14 +111,16 @@ function my_admin_notice(){
 	// moteurs de recherche bloqués
    	$blog_public = get_option('blog_public');
    	if ($blog_public == 0)
-   		$message.= "les moteurs de recherche sont bloqués, ";
+   		echo '<div class="error"><p><a href="'.admin_url('options-reading.php').'">Attention, les moteurs de recherche sont bloqués !</a></p></div>';
 
 	// plugin SEO
    	if (!is_plugin_active('all-in-one-seo-pack/all_in_one_seo_pack.php') && !is_plugin_active('wordpress-seo/wp-seo.php'))
-   		$message.= "aucun plugin de référencement n'est installé, ";
+   		echo '<div class="error"><p><a href="'.admin_url('plugin-install.php?tab=favorites&user=dr-factory').'">Attention, aucun plugin de référencement n\'est installé !</a></p></div>';
 
-   	if ($message != "")
-    echo '<div class="error"><p>Attention, '.substr($message, 0, -2).' !</p></div>';
+   	// analytics
+   	$options = get_option('dc_theme_options');
+   	if ($options['analytics'] == "")
+   		echo '<div class="error"><p><a href="'.admin_url('admin.php?page=theme_options').'">Attention, Google Analytics n\'est pas configuré !</a></p></div>';
 }
 
 // desactive la console pour les non connectés
@@ -190,3 +192,20 @@ function close_comment() {?>
 
 // Feuille de style éditeur tinymce
 add_editor_style('css/tinymce.css');
+
+// VARIABLE AJAX JS
+function admin_ajax_js(){
+	?>
+	<script type="text/javascript">
+	var ajaxurl = "<?php echo admin_url('admin-ajax.php'); ?>";
+	</script>
+	<?php
+}
+add_action('wp_head', 'admin_ajax_js');
+
+function is_future_ip(){
+	if ($_SERVER['REMOTE_ADDR'] == "78.243.123.149" || $_SERVER['REMOTE_ADDR'] == "193.248.157.137")
+		return true;
+	else
+		return false;
+}

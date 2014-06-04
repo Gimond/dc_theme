@@ -1,5 +1,6 @@
 <?php
 require_once('inc/init_dc_theme.php');
+// require_once('inc/custom_post_types.php');
 
 function dc_scripts_styles() {
 	// AJOUT DES SCRIPTS
