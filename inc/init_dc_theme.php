@@ -58,6 +58,30 @@ function init_bugherd_admin(){
 }
 add_action('admin_head', 'init_bugherd_admin');
 
+// VARIABLE AJAX JS
+function admin_ajax_js(){
+	?>
+	<script type="text/javascript">
+	var ajaxurl = "<?php echo admin_url('admin-ajax.php'); ?>";
+	</script>
+	<?php
+}
+add_action('wp_head', 'admin_ajax_js');
+
+//IS FUTURE IP
+function is_future_ip(){
+	if ($_SERVER['REMOTE_ADDR'] == "78.243.123.149" || $_SERVER['REMOTE_ADDR'] == "193.248.157.137")
+		return true;
+	else
+		return false;
+}
+
+// VRAI ADMIN
+// Cette fonction est testée pour afficher des infos ou activer des outils d'administration, notamment la personnalisation du menu, le mode maintenance, la console js ou encore la fonction php debug()
+function is_vrai_admin(){
+	return is_future_ip();
+}
+
 // DESACTIVE L'EDITION DE FICHIER VIA LE BACK
 define('DISALLOW_FILE_EDIT', true);
 
@@ -66,7 +90,7 @@ function load_page_wait() {
 	$options = get_option('dc_theme_options');
 	$isLoginPage = strpos($_SERVER['REQUEST_URI'], "wp-login.php") !== false;
 	$adminPage = strpos($_SERVER['REQUEST_URI'], "wp-admin") !== false;
-	if($options['maintenance'] && !is_user_logged_in() && !$isLoginPage && !$adminPage) {
+	if($options['maintenance'] && !is_user_logged_in() && !$isLoginPage && !$adminPage && !is_vrai_admin()) {
 		require(TEMPLATEPATH.'/maintenance.php');
 		exit();
 	}
@@ -95,12 +119,19 @@ add_action('wp_footer', 'add_google_analytics');
 function debug($var){
 	if (is_user_logged_in()){
 		global $current_user;
-		if (is_future_ip()){
+		if ($current_user->ID == 1){
 			echo "<pre style='position:relative;z-index:300;color:red'>";
 			var_dump($var);
 			echo "</pre>";
 		}
 	}
+}
+
+// désactive les notif de mises à jour
+add_action('admin_menu','wphidenag');
+function wphidenag() {
+	if (!is_vrai_admin())
+		remove_action( 'admin_notices', 'update_nag', 3 );
 }
 
 // messages d'avertissement admin
@@ -123,8 +154,8 @@ function my_admin_notice(){
    		echo '<div class="error"><p><a href="'.admin_url('admin.php?page=theme_options').'">Attention, Google Analytics n\'est pas configuré !</a></p></div>';
 }
 
-// desactive la console pour les non connectés
-if (!is_user_logged_in()){
+// desactive la console pour les non future
+if (!is_vrai_admin()){
 	add_action("wp_head", "desactive_console");
 	function desactive_console(){
 		?>
@@ -148,10 +179,59 @@ if ( function_exists('register_sidebar') ) {
 }
 
 /* SUPPRIMER BARRE ADMIN */
-function my_function_admin_bar(){
-    return false;
+// function my_function_admin_bar(){
+//     return false;
+// }
+// add_filter('show_admin_bar' ,'my_function_admin_bar');
+
+/* PERSONNALISATION DU MENU ADMIN */
+// bouton sur la barre pour switcher entre les menus
+function custom_bouton_menu($wp_admin_bar){
+	global $current_user;
+	get_currentuserinfo();
+	$preview_menu = get_user_meta($current_user->ID, 'preview_menu', true);
+	if ($preview_menu){
+		$args = array(
+			'id' => 'voir-menu-autres',
+			'title' => 'Voir le menu d\'admin comme un vrai admin',
+			'href' => admin_url('?preview_menu=0')
+		);
+	}
+	else{
+		$args = array(
+			'id' => 'voir-menu-autres',
+			'title' => 'Voir le menu d\'admin comme la populace',
+			'href' => admin_url('?preview_menu=1')
+		);
+	}
+
+	$wp_admin_bar->add_node($args);
 }
-add_filter('show_admin_bar' ,'my_function_admin_bar');
+if (is_vrai_admin())
+	add_action('admin_bar_menu', 'custom_bouton_menu', 50);
+
+// planquage des menus
+function menu_admin_dc_theme(){
+	$options = get_option( 'dc_theme_options' );
+	if ($options['cache_menu']){
+
+		global $current_user;
+		get_currentuserinfo();
+		if (isset($_GET['preview_menu'])){
+			update_user_meta($current_user->ID, 'preview_menu', $_GET['preview_menu']);
+		}
+		$preview_menu = get_user_meta($current_user->ID, 'preview_menu', true);
+
+		if (!is_vrai_admin() || $preview_menu){
+			foreach ($options['cache_menu'] as $menu_slug) {
+				remove_menu_page($menu_slug);
+			}
+			remove_menu_page('theme_options');
+		}
+	}
+}
+add_action('admin_menu', 'menu_admin_dc_theme', 999);
+
 
 // détection du nombre de pages pour afficher ou non la navigation
 // renvoie true si plus de 1 page
@@ -192,20 +272,3 @@ function close_comment() {?>
 
 // Feuille de style éditeur tinymce
 add_editor_style('css/tinymce.css');
-
-// VARIABLE AJAX JS
-function admin_ajax_js(){
-	?>
-	<script type="text/javascript">
-	var ajaxurl = "<?php echo admin_url('admin-ajax.php'); ?>";
-	</script>
-	<?php
-}
-add_action('wp_head', 'admin_ajax_js');
-
-function is_future_ip(){
-	if ($_SERVER['REMOTE_ADDR'] == "78.243.123.149" || $_SERVER['REMOTE_ADDR'] == "193.248.157.137")
-		return true;
-	else
-		return false;
-}

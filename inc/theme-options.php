@@ -27,18 +27,35 @@ function theme_options_do_page() {
 		$_REQUEST['settings-updated'] = false;
 	?>
 	<div class="wrap">
-		<?php screen_icon(); echo "<h2>" . get_current_theme() . __( ' options', 'dc_theme' ) . "</h2>"; ?>
+		<?php screen_icon(); echo "<h2>" . get_current_theme() . __( ' options', 'dc_theme' ) . "</h2>";
 
-		<?php if ( false !== $_REQUEST['settings-updated'] ) : ?>
-		<div class="updated fade"><p><strong><?php _e( 'Options sauvegardées', 'dc_theme' ); ?></strong></p></div>
-		<?php endif; ?>
+		// notice "sauvegardé""
+		if ( false !== $_REQUEST['settings-updated'] ) : ?>
+			<div class="updated fade"><p><strong><?php _e( 'Options sauvegardées', 'dc_theme' ); ?></strong></p></div>
+		<?php endif;
 
-		<form method="post" enctype="multipart/form-data" action="options.php">
+		// onglets
+		$tabs = array( 'general' => 'Général', 'bugherd' => 'Bugherd', 'menu' => 'Menu' );
+		echo '<div id="icon-themes" class="icon32"><br></div>';
+		echo '<h2 class="nav-tab-wrapper">';
+		if (!isset($current))
+			$current = 'general';
+		foreach( $tabs as $tab => $name ){
+		    $class = ( $tab == $current ) ? ' nav-tab-active' : '';
+		    echo "<a class='nav-tab$class' data-onglet='$tab' href='#$tab'>$name</a>";
+
+		}
+		echo '</h2>';
+
+		$options = get_option( 'dc_theme_options' );
+		?>
+
+		<form class='onglet_dc_options' id='onglet_dc_options_general' method="post" enctype="multipart/form-data" action="options.php">
+
 			<?php settings_fields( 'dc_theme_options_set' ); ?>
-			<?php $options = get_option( 'dc_theme_options' ); ?>
+			<input type="hidden" name="onglet_dc_options" value="general">
 
 			<table class="form-table">
-
 				<!-- Favicon -->
 				<tr valign="top"><th scope="row"><?php _e( 'Favicon', 'dc_theme' ); ?></th>
 					<td>
@@ -60,9 +77,20 @@ function theme_options_do_page() {
 						<input type='checkbox' id="dc_theme_options[maintenance]" name="dc_theme_options[maintenance]" <?php if ($options['maintenance']) echo "checked='checked'"; ?> />
 					</td>
 				</tr>
+			</table>
 
+			<p class="submit">
+				<input type="submit" class="button-primary" value="<?php _e( 'Enregistrer les options', 'dc_theme' ); ?>" />
+			</p>
+		</form>
+
+		<form class='onglet_dc_options' id='onglet_dc_options_bugherd' method="post" enctype="multipart/form-data" action="options.php">
+
+			<?php settings_fields( 'dc_theme_options_set' ); ?>
+			<input type="hidden" name="onglet_dc_options" value="bugherd">
+
+			<table class="form-table">
 				<!-- Bugherd -->
-				<tr valign="top"><th colspan='2' scope="row"><h3><?php _e( 'Bugherd', 'dc_theme' ); ?></h3></th></tr>
 				<tr valign="top"><th scope="row"><?php _e( 'Activer Bugherd sur le front', 'dc_theme' ); ?></th>
 					<td>
 						<input type='checkbox' id="dc_theme_options[bugherd_front]" name="dc_theme_options[bugherd_front]" <?php if ($options['bugherd_front']) echo "checked='checked'"; ?> />
@@ -85,6 +113,61 @@ function theme_options_do_page() {
 				<input type="submit" class="button-primary" value="<?php _e( 'Enregistrer les options', 'dc_theme' ); ?>" />
 			</p>
 		</form>
+
+		<form class='onglet_dc_options' id='onglet_dc_options_menu' method="post" enctype="multipart/form-data" action="options.php">
+
+			<?php settings_fields( 'dc_theme_options_set' ); ?>
+			<input type="hidden" name="onglet_dc_options" value="menu">
+
+			<table class="form-table">
+				<!-- Menu d'admin -->
+				<tr valign="top"><th scope="row"><?php _e( 'Masquer les menu suivants', 'dc_theme' ); ?></th>
+					<td>
+						<?php
+						// menus classiques
+						$menus = array(
+							"Articles" => "edit.php",
+							"Médias" => "upload.php",
+							"Pages" => "edit.php?post_type=page",
+							"Commentaires" => "edit-comments.php",
+							"Apparence" => "themes.php",
+							"Extensions" => "plugins.php",
+							"Utilisateurs" => "users.php",
+							"Outils" => "tools.php",
+							"Réglages" => "options-general.php"
+						);
+
+						// custom post types
+						$args = array(
+							'public'   => true,
+   							'_builtin' => false
+   						);
+						$output = 'objects';
+						$post_types = get_post_types( $args, $output );
+						foreach ($post_types as $post_type) {
+							if ($post_type->rewrite['slug'])
+								$menus[$post_type->labels->menu_name] = "edit.php?post_type=".$post_type->rewrite['slug'];
+						}
+
+						// advanced custom fields
+						if (function_exists('get_field'))
+							$menus["ACF"] = "edit.php?post_type=acf";
+
+						foreach($menus as $key => $value){
+							echo "<input type='checkbox' id='dc_theme_options[cache_menu]' name='dc_theme_options[cache_menu][]'";
+							if (in_array($value, $options['cache_menu'])) echo " checked='checked'";
+							echo " value='".$value."' /> ".$key."<br />";
+						}
+						?>
+					</td>
+				</tr>
+
+			</table>
+
+			<p class="submit">
+				<input type="submit" class="button-primary" value="<?php _e( 'Enregistrer les options', 'dc_theme' ); ?>" />
+			</p>
+		</form>
 	</div>
 	<?php
 }
@@ -93,41 +176,83 @@ function theme_options_do_page() {
  * Sanitize and validate input. Accepts an array, return a sanitized array.
  */
 function dc_theme_options_validate($input){
+	debug($input);
+	$options = get_option( 'dc_theme_options' );
 
-	// analytics
-	if (!isset( $input['analytics']))
-		$input['analytics'] = '';
+	if (isset($input['onglet_dc_options'])){
+		if ($input['onglet_dc_options'] == 'general'){
+			// analytics
+			if (!isset($input['analytics']))
+				$input['analytics'] = '';
 
-	// favicon
-    if ($_FILES['favicon']['size'] > 0) {
-        $overrides = array('test_form' => false);
-        $file = wp_handle_upload($_FILES['favicon'], $overrides);
-        $input['favicon'] = $file['url'];
-    }
-	else{
-		$options = get_option('dc_theme_options');
-		$input['favicon'] = $options['favicon'];
+			// favicon
+		    if ($_FILES['favicon']['size'] > 0) {
+		        $overrides = array('test_form' => false);
+		        $file = wp_handle_upload($_FILES['favicon'], $overrides);
+		        $input['favicon'] = $file['url'];
+		    }
+			else{
+				$options = get_option('dc_theme_options');
+				$input['favicon'] = $options['favicon'];
+			}
+
+			// maintenance
+			if (isset( $input['maintenance']))
+				$input['maintenance'] = 1;
+			else
+				$input['maintenance'] = 0;
+		}
+
+		if ($input['onglet_dc_options'] == 'bugherd'){
+			// bugherd
+			if (isset($input['bugherd_front']))
+				$input['bugherd_front'] = 1;
+			else
+				$input['bugherd_front'] = 0;
+			if (isset( $input['bugherd_admin']))
+				$input['bugherd_admin'] = 1;
+			else
+				$input['bugherd_admin'] = 0;
+
+			if (!isset( $input['cle_bugherd']))
+				$input['cle_bugherd'] = '';
+		}
+
+		if ($input['onglet_dc_options'] == 'menu'){
+			// echo "hop";
+			// $input['bugherd_front'] = 1;
+			// die();
+		}
 	}
+	return array_merge($options, $input);
+}
 
-	// maintenance
-	if (isset( $input['maintenance']))
-		$input['maintenance'] = 1;
-	else
-		$input['maintenance'] = 0;
+// CSS
+add_action('admin_head', 'css_dc_theme_options');
+function css_dc_theme_options(){
+	?>
+	<style type="text/css">
+		.onglet_dc_options{
+			display: none;
+		}
+		#onglet_dc_options_general{
+			display: block;
+		}
+	</style>
 
-	// bugherd
-	if (isset( $input['bugherd_front']))
-		$input['bugherd_front'] = 1;
-	else
-		$input['bugherd_front'] = 0;
-	if (isset( $input['bugherd_admin']))
-		$input['bugherd_admin'] = 1;
-	else
-		$input['bugherd_admin'] = 0;
-	if (!isset( $input['cle_bugherd']))
-		$input['cle_bugherd'] = '';
+	<script>
+		jQuery(document).ready(function($){
+			$('.nav-tab').click(function(){
+				var onglet = $(this).data('onglet');
+				$('.onglet_dc_options').hide();
+				$('#onglet_dc_options_'+onglet).show();
 
-	return $input;
+				$('.nav-tab').removeClass('nav-tab-active');
+				$(this).addClass('nav-tab-active');
+			});
+		});
+	</script>
+	<?php
 }
 
 // adapted from http://planetozh.com/blog/2009/05/handling-plugins-options-in-wordpress-28-with-register_setting/
