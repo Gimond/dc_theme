@@ -1,4 +1,52 @@
 <?php
+function myactivationfunction($oldname, $oldtheme=false) {
+	update_option('dc_theme_options', array(
+		'analytics' => '',
+		'favicon' => '',
+		'maintenance' => '1',
+		'bugherd_front' => '0',
+		'bugherd_admin' => '0',
+		'cle_bugherd' => '',
+		'cache_menu' => array()
+	));
+
+	// $input['analytics']))
+	// 				$input['analytics'] = '';
+
+	// 			// favicon
+	// 		    if ($_FILES['favicon']['size'] > 0) {
+	// 		        $overrides = array('test_form' => false);
+	// 		        $file = wp_handle_upload($_FILES['favicon'], $overrides);
+	// 		        $input['favicon'] = $file['url'];
+	// 		    }
+	// 			else{
+	// 				$options = get_option('dc_theme_options');
+	// 				$input['favicon'] = $options['favicon'];
+	// 			}
+
+	// 			// maintenance
+	// 			if (isset( $input['maintenance']))
+	// 				$input['maintenance'] = 1;
+	// 			else
+	// 				$input['maintenance'] = 0;
+	// 		}
+
+	// 		if ($input['onglet_dc_options'] == 'bugherd'){
+	// 			// bugherd
+	// 			if (isset($input['bugherd_front']))
+	// 				$input['bugherd_front'] = 1;
+	// 			else
+	// 				$input['bugherd_front'] = 0;
+	// 			if (isset( $input['bugherd_admin']))
+	// 				$input['bugherd_admin'] = 1;
+	// 			else
+	// 				$input['bugherd_admin'] = 0;
+
+	// 			if (!isset( $input['cle_bugherd']))
+	// 				$input['cle_bugherd'] = '';
+}
+add_action("after_switch_theme", "myactivationfunction", 10 ,  2);
+
 
 add_action( 'admin_init', 'theme_options_init' );
 add_action( 'admin_menu', 'theme_options_add_page' );
@@ -155,7 +203,7 @@ function theme_options_do_page() {
 
 						foreach($menus as $key => $value){
 							echo "<input type='checkbox' id='dc_theme_options[cache_menu]' name='dc_theme_options[cache_menu][]'";
-							if (in_array($value, $options['cache_menu'])) echo " checked='checked'";
+							if ($options['cache_menu'] && in_array($value, $options['cache_menu'])) echo " checked='checked'";
 							echo " value='".$value."' /> ".$key."<br />";
 						}
 						?>
@@ -177,7 +225,9 @@ function theme_options_do_page() {
  */
 function dc_theme_options_validate($input){
 	debug($input);
-	$options = get_option( 'dc_theme_options' );
+	$options = get_option('dc_theme_options');
+	if (!$options)
+		$options = array();
 
 	if (isset($input['onglet_dc_options'])){
 		if ($input['onglet_dc_options'] == 'general'){

@@ -75,11 +75,17 @@ function is_future_ip(){
 	else
 		return false;
 }
+function is_local(){
+	if ($_SERVER['REMOTE_ADDR'] == "127.0.0.1")
+		return true;
+	else
+		return false;
+}
 
 // VRAI ADMIN
 // Cette fonction est testée pour afficher des infos ou activer des outils d'administration, notamment la personnalisation du menu, le mode maintenance, la console js ou encore la fonction php debug()
 function is_vrai_admin(){
-	return is_future_ip();
+	return (is_future_ip() || is_local());
 }
 
 // DESACTIVE L'EDITION DE FICHIER VIA LE BACK
@@ -177,6 +183,18 @@ if ( function_exists('register_sidebar') ) {
 		'after_title' => '</h1>',
 	));
 }
+
+// On vire les metabox inutiles sur le tableau de bord (admin)
+function wptutsplus_remove_dashboard_widgets() {
+    remove_meta_box( 'dashboard_recent_comments', 'dashboard', 'normal' );
+    remove_meta_box( 'dashboard_incoming_links', 'dashboard', 'normal' );
+    remove_meta_box( 'dashboard_quick_press', 'dashboard', 'side' );
+    remove_meta_box( 'dashboard_primary', 'dashboard', 'side' );
+    remove_meta_box( 'dashboard_secondary', 'dashboard', 'side' );
+    // remove_meta_box( 'dashboard_right_now', 'dashboard', 'normal' );
+}
+add_action( 'wp_dashboard_setup', 'wptutsplus_remove_dashboard_widgets' );
+remove_action('welcome_panel', 'wp_welcome_panel');
 
 /* SUPPRIMER BARRE ADMIN */
 // function my_function_admin_bar(){
