@@ -92,11 +92,20 @@ function is_vrai_admin(){
 define('DISALLOW_FILE_EDIT', true);
 
 // PAGE ATTENTE
+// Pour passer outre la page de maintenance, il faut remplir une des conditions suivante :
+// - être un "vrai admin" (voir la fonction ci-dessus)
+// - être connecté
+// - avoir une session "preview". Cette session est initialisée en visitant l'url du site suivie de ?preview=1
 function load_page_wait() {
 	$options = get_option('dc_theme_options');
 	$isLoginPage = strpos($_SERVER['REQUEST_URI'], "wp-login.php") !== false;
 	$adminPage = strpos($_SERVER['REQUEST_URI'], "wp-admin") !== false;
-	if($options['maintenance'] && !is_user_logged_in() && !$isLoginPage && !$adminPage && !is_vrai_admin()) {
+	if($options['maintenance'] && !is_user_logged_in() && !$isLoginPage && !$adminPage && !is_vrai_admin() && !isset($_SESSION['preview'])) {
+		if (isset($_GET['preview'])){
+			session_start();
+			$_SESSION['preview'] = true;
+			header("location:".home_url());
+		}
 		require(TEMPLATEPATH.'/maintenance.php');
 		exit();
 	}
