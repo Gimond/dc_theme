@@ -23,6 +23,29 @@ add_filter( 'auto_update_core', '__return_false' );
 // PAGE D'OPTIONS
 require_once ( get_template_directory() . '/inc/theme-options.php' );
 
+// COUPE UNE CHAINE DE CARACTERES SANS COUPER LES MOTS
+function cut_carac($texte, $max){
+	$texte = strip_shortcodes(strip_tags($texte));
+	if(strlen($texte)>=$max){
+	$texte = substr($texte,0,$max);
+	$espace = strrpos($texte," ");
+	if($espace)
+	$texte = substr($texte,0,$espace);
+	$texte = $texte."...";
+	}
+	$texte = trim(str_replace("&nbsp;", ' ', $texte));
+	return $texte;
+}
+
+// RECUPERE L'URL DE L'IMAGES A LA UNE
+function get_thumb_src($post_id, $size = 'full'){
+	$img_src = wp_get_attachment_image_src(get_post_thumbnail_id($post_id), $size);
+	if ($img_src)
+		return $img_src[0];
+	else
+		return false;
+}
+
 // TICKETS BUGHERD
 function init_bugherd(){
 	$options = get_option( 'dc_theme_options' );
@@ -58,11 +81,12 @@ function init_bugherd_admin(){
 }
 add_action('admin_head', 'init_bugherd_admin');
 
-// VARIABLE AJAX JS
+// VARIABLES JS
 function admin_ajax_js(){
 	?>
 	<script type="text/javascript">
 	var ajaxurl = "<?php echo admin_url('admin-ajax.php'); ?>";
+	var template_url = "<?php bloginfo('template_url'); ?>";
 	</script>
 	<?php
 }
@@ -132,13 +156,10 @@ add_action('wp_footer', 'add_google_analytics');
 
 // DEBUG
 function debug($var){
-	if (is_user_logged_in()){
-		global $current_user;
-		if ($current_user->ID == 1){
-			echo "<pre style='position:relative;z-index:300;color:red'>";
-			var_dump($var);
-			echo "</pre>";
-		}
+	if (is_vrai_admin()){
+		echo "<pre style='position:relative;z-index:300;color:red;padding:15px;background:#DEDEDE;border:1px solid #AAA;'>";
+		var_dump($var);
+		echo "</pre>";
 	}
 }
 

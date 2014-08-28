@@ -3,6 +3,7 @@
 
 <head>
 <meta charset="<?php bloginfo('charset'); ?>" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 <title><?php wp_title('&laquo;', true, 'right'); ?> <?php bloginfo('name'); ?></title>
 
@@ -20,9 +21,8 @@ wp_head();
 </head>
 
 <body <?php body_class(); ?>>
-		
+
 	<header>
 		<h1><a href="<?php print(home_url()); ?>/"><?php bloginfo('name'); ?></a></h1>
 		<h2><?php bloginfo('description'); ?></h2>
 	</header>
-	
