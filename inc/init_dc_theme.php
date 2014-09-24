@@ -320,3 +320,42 @@ function close_comment() {?>
 
 // Feuille de style éditeur tinymce
 add_editor_style('css/tinymce.css');
+
+// supprime du contenu inutile du header
+remove_action('wp_head', 'rsd_link');
+remove_action('wp_head', 'wlwmanifest_link');
+remove_action('wp_head', 'wp_generator');
+remove_action('wp_head', 'start_post_rel_link');
+remove_action('wp_head', 'index_rel_link');
+remove_action('wp_head', 'adjacent_posts_rel_link');
+remove_action('wp_head', 'wp_shortlink_wp_head', 10, 0 );
+remove_action('wp_head', 'wlwmanifest_link');
+add_filter( 'index_rel_link', 'remove_code' );
+add_filter( 'parent_post_rel_link', 'remove_code' );
+add_filter( 'start_post_rel_link', 'remove_code' );
+add_filter( 'previous_post_rel_link', 'remove_code' );
+add_filter( 'next_post_rel_link', 'remove_code' );
+add_filter('post_comments_feed_link','remove_code');
+function remove_code( $data ) {
+return false;
+}
+
+// Change le texte dans le footer de l'admin
+function remove_footer_admin () {
+	echo '';
+}
+add_filter('admin_footer_text', 'remove_footer_admin');
+// vire le numéro de version à droite dans le footer
+function my_footer_shh() {
+    remove_filter( 'update_footer', 'core_update_footer' );
+}
+add_action( 'admin_menu', 'my_footer_shh' );
+
+// Ajoute un raccourci vers les plugins favoris
+add_action( 'admin_menu' , 'admin_menu_plugins_favoris' );
+function admin_menu_plugins_favoris() {
+    global $submenu;
+    add_plugins_page('Favoris', 'Favoris', 'read', 'plugins_favoris', 'redirection_plugins_favoris');
+    end($submenu['plugins.php']);
+    $submenu['plugins.php'][key($submenu['plugins.php'])][2] = 'plugin-install.php?tab=favorites&user=dr-factory';
+}
